@@ -14,6 +14,9 @@ import com.example.service.MongoCheckService;
 import com.example.service.MqttCheckService;
 import com.example.service.SmsService;
 
+import lombok.extern.log4j.Log4j;
+
+@Log4j
 @Component
 public class ConnectStatusCheckTask extends BaseTask {
 
@@ -41,6 +44,7 @@ public class ConnectStatusCheckTask extends BaseTask {
             if (e.getErrorCode() == ErrorCode.MQTT_CONNECT_ERROR 
                 || e.getErrorCode() == ErrorCode.MONGO_DATA_ERROR 
                 || e.getErrorCode() == ErrorCode.MONGO_CONNECT_ERROR) {
+                log.error(e);
                 message = e.getErrorCode().getMessage();
 
                 SimpleDateFormat sdf = new SimpleDateFormat("yy-MM-dd HH:mm");

@@ -41,7 +41,7 @@ public class PanelError {
     @Field(FIELD_PANEL_LOT)
     private String panelLot;
     
-    public Integer getInsterTime() {
-        return Integer.parseInt(id.substring(0, 8), 16);
+    public Long getInsterTime() {
+        return Long.parseLong(id.substring(0, 8), 16);
     }
 }

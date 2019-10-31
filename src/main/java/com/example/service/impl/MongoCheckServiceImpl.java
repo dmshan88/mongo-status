@@ -19,6 +19,9 @@ import com.example.pojo.PanelResult;
 import com.example.pojo.vo.MongoStatus;
 import com.example.service.MongoCheckService;
 
+import lombok.extern.log4j.Log4j;
+
+@Log4j
 @Service
 public class MongoCheckServiceImpl implements MongoCheckService {
     
@@ -57,13 +60,15 @@ public class MongoCheckServiceImpl implements MongoCheckService {
         if (panelResult == null || panelError == null) {
             throw new CustomException(ErrorCode.MONGO_DATA_ERROR, "无记录");
         }
-        isResult = panelResult.getInsterTime() > panelError.getInsterTime();
+        isResult = panelResult.getInsterTime().compareTo(panelError.getInsterTime()) > 0;
         long currentTimestamp = new Date().getTime();
         long lastTimestamp = isResult ? panelResult.getInsterTime() * 1000 : panelError.getInsterTime() * 1000;
         int inteval = getInterval();
         if (currentTimestamp - lastTimestamp > inteval * 2) {
+            log.error("严重怀疑错误 ,lastTimestamp:" + lastTimestamp + "; interval:" + inteval);
             throw new CustomException(ErrorCode.MONGO_DATA_ERROR, "严重怀疑错误！！");
         } else if (currentTimestamp - lastTimestamp > inteval) {
+            log.error("怀疑错误 ,lastTimestamp:" + lastTimestamp + "; interval:" + inteval);
             throw new CustomException(ErrorCode.MONGO_DATA_ERROR, "怀疑错误!");
         }
     }
